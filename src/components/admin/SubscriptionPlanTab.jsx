@@ -84,7 +84,7 @@ export default function SubscriptionPlanTab({ subscriptionPlans = [], fetchSubsc
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
         <h2>Subscription Plans</h2>
         <button className="btn btn-primary" onClick={openAddForm}>+ Add Plan</button>
       </div>
@@ -113,8 +113,10 @@ export default function SubscriptionPlanTab({ subscriptionPlans = [], fetchSubsc
                   <td>{plan.billing_cycle}</td>
                   <td>{plan.ad_post_limit} / {plan.featured_ads_limit}</td>
                   <td>
-                    <button className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', marginRight: '0.5rem' }} onClick={() => openEditForm(plan)}>Edit</button>
-                    <button className="btn btn-danger" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => handleDelete(plan._id)}>Delete</button>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => openEditForm(plan)}>Edit</button>
+                      <button className="btn btn-danger" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => handleDelete(plan._id)}>Delete</button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -160,7 +162,7 @@ export default function SubscriptionPlanTab({ subscriptionPlans = [], fetchSubsc
                 <label>Featured Ads Limit</label>
                 <input type="number" className="form-input" required min="0" value={formData.featured_ads_limit} onChange={(e) => setFormData({...formData, featured_ads_limit: Number(e.target.value)})} />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">{editingPlan ? 'Update Plan' : 'Create Plan'}</button>
               </div>

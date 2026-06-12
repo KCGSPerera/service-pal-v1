@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Briefcase, Tag, AlertTriangle, Key, LogOut, Plus, Edit, Trash, Check, X, ShieldAlert, Award, Star, MessageSquare, BarChart2, Scale, Folder, AlertCircle, CreditCard, List } from 'lucide-react';
+import { Shield, Users, Briefcase, Tag, AlertTriangle, Key, LogOut, Plus, Edit, Trash, Check, X, ShieldAlert, Award, Star, MessageSquare, BarChart2, Scale, Folder, AlertCircle, CreditCard, List, Menu, ChevronDown, ChevronUp } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import AdminManagerTab from './admin/AdminManagerTab';
 import SubscriptionTab from './admin/SubscriptionTab';
@@ -13,6 +13,12 @@ import ChatMonitoringTab from './admin/ChatMonitoringTab';
 export default function AdminDashboard({ showToast }) {
   const { token, user } = useAuth();
   const [activeTab, setActiveTab] = useState('analytics');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+    setMobileMenuOpen(false);
+  };
 
   // Lists State
   const [stats, setStats] = useState(null);
@@ -33,6 +39,7 @@ export default function AdminDashboard({ showToast }) {
   const [selectedUpgrade, setSelectedUpgrade] = useState(null);
   const [adminRemarks, setAdminRemarks] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [expandedUpgradeRow, setExpandedUpgradeRow] = useState(null);
 
   // Category Forms State
   const [showCategoryForm, setShowCategoryForm] = useState(false);
@@ -113,7 +120,7 @@ export default function AdminDashboard({ showToast }) {
 
   const fetchComplaints = async () => {
     try {
-      const response = await fetch('/api/complaints', {
+      const response = await fetch('/api/complaint-tickets', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -294,44 +301,65 @@ export default function AdminDashboard({ showToast }) {
 
   return (
     <div className="dashboard-layout">
+      {/* Mobile admin header bar */}
+      <div className="mobile-admin-header">
+        <button className="btn btn-secondary" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={20} />
+        </button>
+        <span style={{ fontWeight: 'bold', fontSize: '1rem', background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textTransform: 'uppercase' }}>
+          {activeTab.replace('-', ' ')}
+        </span>
+        <div style={{ width: '36px' }}></div>
+      </div>
+
+      {/* Sidebar Drawer Overlay */}
+      {mobileMenuOpen && (
+        <div className="admin-sidebar-overlay" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
       {/* Sidebar navigation */}
-      <div className="glass-panel p-4" style={{ height: 'fit-content', padding: '1rem' }}>
-        <div style={{ padding: '0.5rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem', textAlign: 'center' }}>
-          <h3 style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Super Admin</h3>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user?.email}</span>
+      <div className={`glass-panel p-4 admin-sidebar-container ${mobileMenuOpen ? 'open' : ''}`} style={{ height: 'fit-content', padding: '1rem' }}>
+        <div style={{ padding: '0.5rem', borderBottom: '1px solid var(--border-glass)', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ textAlign: 'left' }}>
+            <h3 style={{ background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>Super Admin</h3>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user?.email}</span>
+          </div>
+          <button className="btn btn-secondary mobile-only" style={{ padding: '0.35rem', display: 'none', alignItems: 'center', justifyContent: 'center' }} onClick={() => setMobileMenuOpen(false)}>
+            <X size={18} />
+          </button>
         </div>
         <ul className="sidebar-menu">
-          <li className={`sidebar-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => setActiveTab('analytics')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => handleTabChange('analytics')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <BarChart2 size={16} color="var(--accent-primary)" /> System Analytics
           </li>
-          <li className={`sidebar-item ${activeTab === 'upgrades' ? 'active' : ''}`} onClick={() => setActiveTab('upgrades')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'upgrades' ? 'active' : ''}`} onClick={() => handleTabChange('upgrades')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Scale size={16} color="var(--accent-primary)" /> Upgrade Approvals ({upgrades.filter((u) => u.status === 'pending').length})
           </li>
-          <li className={`sidebar-item ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'users' ? 'active' : ''}`} onClick={() => handleTabChange('users')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Users size={16} color="var(--accent-primary)" /> User Management
           </li>
-          <li className={`sidebar-item ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => setActiveTab('categories')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'categories' ? 'active' : ''}`} onClick={() => handleTabChange('categories')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Folder size={16} color="var(--accent-primary)" /> Category Manager
           </li>
-          <li className={`sidebar-item ${activeTab === 'complaints' ? 'active' : ''}`} onClick={() => setActiveTab('complaints')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'complaints' ? 'active' : ''}`} onClick={() => handleTabChange('complaints')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <AlertCircle size={16} color="var(--accent-primary)" /> Complaint Management
           </li>
-          <li className={`sidebar-item ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => handleTabChange('reviews')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Star size={16} color="var(--accent-primary)" /> Review Moderation
           </li>
-          <li className={`sidebar-item ${activeTab === 'chat-monitoring' ? 'active' : ''}`} onClick={() => setActiveTab('chat-monitoring')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'chat-monitoring' ? 'active' : ''}`} onClick={() => handleTabChange('chat-monitoring')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <MessageSquare size={16} color="var(--accent-primary)" /> Chat Monitoring
           </li>
-          <li className={`sidebar-item ${activeTab === 'subscriptions' ? 'active' : ''}`} onClick={() => setActiveTab('subscriptions')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <li className={`sidebar-item ${activeTab === 'subscriptions' ? 'active' : ''}`} onClick={() => handleTabChange('subscriptions')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <CreditCard size={16} color="var(--accent-primary)" /> Subscriptions
           </li>
           {user?.role === 'super_admin' && (
-            <li className={`sidebar-item ${activeTab === 'subscription-plans' ? 'active' : ''}`} onClick={() => setActiveTab('subscription-plans')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <li className={`sidebar-item ${activeTab === 'subscription-plans' ? 'active' : ''}`} onClick={() => handleTabChange('subscription-plans')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <List size={16} color="var(--accent-primary)" /> Subscription Plans
             </li>
           )}
           {user?.role === 'super_admin' && (
-            <li className={`sidebar-item ${activeTab === 'admins' ? 'active' : ''}`} onClick={() => setActiveTab('admins')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <li className={`sidebar-item ${activeTab === 'admins' ? 'active' : ''}`} onClick={() => handleTabChange('admins')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Shield size={16} color="var(--accent-primary)" /> Admin Management
             </li>
           )}
@@ -401,7 +429,7 @@ export default function AdminDashboard({ showToast }) {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem', marginTop: '2rem' }} className="grid-cols-2">
+                <div className="responsive-split-analytics">
                   {/* SVG earnings progress chart */}
                   <div className="glass-panel p-4">
                     <h3>Simulated Revenue Growth</h3>
@@ -468,40 +496,58 @@ export default function AdminDashboard({ showToast }) {
                     <tr>
                       <th>User</th>
                       <th>Business Profile</th>
-                      <th>Category</th>
-                      <th>Type</th>
-                      <th>Submission Date</th>
+                      <th className="hide-on-mobile">Category</th>
+                      <th className="hide-on-mobile">Type</th>
+                      <th className="hide-on-mobile">Date</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {upgrades.map((req) => (
-                      <tr key={req._id}>
-                        <td>
-                          <div style={{ fontWeight: '600' }}>{req.user_id?.first_name} {req.user_id?.last_name}</div>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>@{req.user_id?.username}</span>
-                        </td>
-                        <td>
-                          <div style={{ fontWeight: '600' }}>{req.business_name}</div>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{req.business_email}</span>
-                        </td>
-                        <td>{req.category_id?.category_name}</td>
-                        <td>
-                          <span style={{ fontWeight: '500', color: req.service_type === 'Corporate' ? 'var(--accent-secondary)' : 'var(--text-primary)' }}>
-                            {req.service_type}
-                          </span>
-                        </td>
-                        <td>{new Date(req.created_at).toLocaleDateString()}</td>
-                        <td>
-                          <span className={`badge badge-${req.status}`}>{req.status}</span>
-                        </td>
-                        <td>
-                          <button className="btn btn-secondary" style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem' }} onClick={() => { setSelectedUpgrade(req); setAdminRemarks(req.admin_remarks || ''); }}>
-                            View Documents
-                          </button>
-                        </td>
-                      </tr>
+                      <React.Fragment key={req._id}>
+                        <tr>
+                          <td>
+                            <div style={{ fontWeight: '600' }}>{req.user_id?.first_name} {req.user_id?.last_name}</div>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>@{req.user_id?.username}</span>
+                          </td>
+                          <td>
+                            <div style={{ fontWeight: '600' }}>{req.business_name}</div>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{req.business_email}</span>
+                          </td>
+                          <td className="hide-on-mobile">{req.category_id?.category_name}</td>
+                          <td className="hide-on-mobile">
+                            <span style={{ fontWeight: '500', color: req.service_type === 'Corporate' ? 'var(--accent-secondary)' : 'var(--text-primary)' }}>
+                              {req.service_type}
+                            </span>
+                          </td>
+                          <td className="hide-on-mobile">{new Date(req.created_at).toLocaleDateString()}</td>
+                          <td>
+                            <span className={`badge badge-${req.status}`}>{req.status}</span>
+                          </td>
+                          <td>
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                              <button className="btn btn-secondary" style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem' }} onClick={() => { setSelectedUpgrade(req); setAdminRemarks(req.admin_remarks || ''); }}>
+                                View
+                              </button>
+                              <button className="btn btn-secondary mobile-only" style={{ padding: '0.35rem 0.5rem' }} onClick={() => setExpandedUpgradeRow(expandedUpgradeRow === req._id ? null : req._id)}>
+                                {expandedUpgradeRow === req._id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedUpgradeRow === req._id && (
+                          <tr className="hide-on-desktop" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                            <td colSpan="4" style={{ padding: '0.75rem 1rem' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
+                                <div><strong style={{color: 'var(--text-secondary)'}}>Category:</strong> {req.category_id?.category_name}</div>
+                                <div><strong style={{color: 'var(--text-secondary)'}}>Type:</strong> {req.service_type}</div>
+                                <div><strong style={{color: 'var(--text-secondary)'}}>Submission Date:</strong> {new Date(req.created_at).toLocaleDateString()}</div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>
@@ -567,16 +613,16 @@ export default function AdminDashboard({ showToast }) {
         {/* TAB 4: CATEGORY MANAGER */}
         {activeTab === 'categories' && (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
               <h2>Category & Subcategory Directory</h2>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button className="btn btn-primary" onClick={() => setShowCategoryForm(true)}>+ Add Category</button>
                 <button className="btn btn-primary" onClick={() => setShowSubForm(true)}>+ Add Subcategory</button>
               </div>
             </div>
 
             {/* Categories Table list */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '2rem' }} className="grid-cols-2">
+            <div className="responsive-split-categories">
               <div className="glass-panel p-4">
                 <h3>Main Service Categories</h3>
                 <div className="table-container" style={{ marginTop: '1rem' }}>
@@ -649,7 +695,7 @@ export default function AdminDashboard({ showToast }) {
 
         {/* NEW TABS */}
         {activeTab === 'complaints' && (
-          <ComplaintTab complaints={complaints} fetchComplaints={fetchComplaints} showToast={showToast} token={token} />
+          <ComplaintTab token={token} showToast={showToast} />
         )}
         
         {activeTab === 'reviews' && (
@@ -682,7 +728,7 @@ export default function AdminDashboard({ showToast }) {
               Verify Upgrade Application: {selectedUpgrade.business_name}
             </h2>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }} className="grid-cols-2">
+            <div className="responsive-split-modal">
               <div>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>APPLICANT USER</span>
                 <div style={{ fontWeight: 'bold' }}>{selectedUpgrade.user_id?.first_name} {selectedUpgrade.user_id?.last_name}</div>
@@ -711,7 +757,7 @@ export default function AdminDashboard({ showToast }) {
                   <div>NIC Number: {selectedUpgrade.nic_number}</div>
                   
                   {/* Image downloads / display */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }} className="grid-cols-2">
+                  <div className="responsive-split-modal-img">
                     <div>
                       <div>NIC Front View:</div>
                       {selectedUpgrade.nic_front_image ? (
@@ -739,7 +785,7 @@ export default function AdminDashboard({ showToast }) {
                   <div>Business Registration Number: {selectedUpgrade.registration_number}</div>
                   {selectedUpgrade.tax_id && <div>Tax File ID: {selectedUpgrade.tax_id}</div>}
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }} className="grid-cols-2">
+                  <div className="responsive-split-modal-img">
                     <div>
                       <div>BR Document Scan / PDF:</div>
                       {selectedUpgrade.registration_document ? (
@@ -772,7 +818,7 @@ export default function AdminDashboard({ showToast }) {
                   <label className="form-label">Review Remarks / Reason (Required if Rejecting)</label>
                   <input type="text" className="form-input" value={adminRemarks} onChange={(e) => setAdminRemarks(e.target.value)} placeholder="e.g. Documentation verified." />
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1.5rem', flexWrap: 'wrap' }}>
                   <button className="btn btn-secondary" onClick={() => { setSelectedUpgrade(null); setAdminRemarks(''); }} disabled={actionLoading}>
                     Close
                   </button>
@@ -813,7 +859,7 @@ export default function AdminDashboard({ showToast }) {
                 <input type="file" accept="image/*" onChange={handleLogoConvert} />
                 {newCatImage && <img src={newCatImage} alt="cat preview" style={{ maxHeight: '100px', objectFit: 'contain', marginTop: '0.5rem' }} />}
               </div>
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowCategoryForm(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Create Category</button>
               </div>
@@ -841,7 +887,7 @@ export default function AdminDashboard({ showToast }) {
                   ))}
                 </select>
               </div>
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowSubForm(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Create Subcategory</button>
               </div>

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Category from '../models/Category.js';
 import SubCategory from '../models/SubCategory.js';
+import ComplaintOption from '../models/ComplaintOption.js';
 
 export async function seedDatabase() {
   try {
@@ -73,6 +74,30 @@ export async function seedDatabase() {
         postal_code: '00100',
       });
       console.log('Super Admin user created: admin@servicepal.com / admin123');
+    }
+
+    // 3. Seed Default Support/Complaint Options
+    const optionCount = await ComplaintOption.countDocuments();
+    if (optionCount === 0) {
+      console.log('Seeding initial complaint dropdown options...');
+      const defaultOptions = [
+        { type: 'title', value: 'Billing & Payments' },
+        { type: 'title', value: 'Profile & Registration' },
+        { type: 'title', value: 'Chat & Messaging' },
+        { type: 'title', value: 'Bookings & Orders' },
+        { type: 'title', value: 'Performance & Speed' },
+        { type: 'title', value: 'UI Layout Bug' },
+        
+        { type: 'subtitle', value: 'Credit card payment failure' },
+        { type: 'subtitle', value: 'Upgrade request pending review' },
+        { type: 'subtitle', value: 'Messages not sending' },
+        { type: 'subtitle', value: 'Cannot confirm booking completion' },
+        { type: 'subtitle', value: 'File attachment upload error' },
+        { type: 'subtitle', value: 'Buttons unclickable on mobile' }
+      ];
+
+      await ComplaintOption.insertMany(defaultOptions);
+      console.log('Default complaint options seeded successfully.');
     }
   } catch (error) {
     console.error('Seeding database error:', error);

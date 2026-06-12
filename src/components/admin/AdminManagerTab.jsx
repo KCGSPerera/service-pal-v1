@@ -57,7 +57,7 @@ export default function AdminManagerTab({ adminsList = [], fetchAdmins, showToas
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
         <h2>Admin Management</h2>
         {currentUser?.role === 'super_admin' && (
           <button className="btn btn-primary" onClick={() => setShowForm(true)}>+ Add Admin</button>
@@ -133,7 +133,7 @@ export default function AdminManagerTab({ adminsList = [], fetchAdmins, showToas
                   <option value="super_admin">Super Admin</option>
                 </select>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Create</button>
               </div>

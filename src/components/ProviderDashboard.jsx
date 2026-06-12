@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Star, Calendar, Megaphone, Briefcase, Settings, MapPin, Clock, Link as LinkIcon, Bell, CreditCard, BarChart2 } from 'lucide-react';
+import { Star, Calendar, Megaphone, Briefcase, Settings, MapPin, Clock, Link as LinkIcon, Bell, CreditCard, BarChart2, AlertTriangle } from 'lucide-react';
 import ProviderReviews from './ProviderReviews';
+import ComplaintsSection from './ComplaintsSection';
 
 export default function ProviderDashboard({ showToast }) {
   const { token, user, refreshUser } = useAuth();
@@ -549,6 +550,9 @@ export default function ProviderDashboard({ showToast }) {
           <li className={`sidebar-item ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <BarChart2 size={16} color="var(--accent-primary)" /> Ratings &amp; Reviews
           </li>
+          <li className={`sidebar-item ${activeTab === 'complaints' ? 'active' : ''}`} onClick={() => setActiveTab('complaints')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <AlertTriangle size={16} color="var(--accent-primary)" /> Complaints
+          </li>
         </ul>
       </div>
 
@@ -986,6 +990,15 @@ export default function ProviderDashboard({ showToast }) {
             providerId={user._id}
             token={token}
             showToast={showToast}
+          />
+        )}
+        {/* TAB 7: COMPLAINTS */}
+        {activeTab === 'complaints' && (
+          <ComplaintsSection
+            token={token}
+            currentUser={user}
+            showToast={showToast}
+            asRole="provider"
           />
         )}
 

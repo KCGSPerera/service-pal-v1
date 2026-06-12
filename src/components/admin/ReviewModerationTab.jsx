@@ -231,7 +231,7 @@ export default function ReviewModerationTab({ token, showToast }) {
 
                     {/* Actions */}
                     <td style={{ padding: '0.75rem', textAlign: 'right' }}>
-                      <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
                         
                         {/* Approve */}
                         {rev.review_status !== 'Approved' && (

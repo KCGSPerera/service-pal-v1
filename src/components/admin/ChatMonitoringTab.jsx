@@ -39,7 +39,7 @@ export default function ChatMonitoringTab({ token, stats, showToast }) {
     <div style={{ animation: 'fadeIn 0.3s ease-in', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
       
       {/* Overview Intro card */}
-      <div className="glass-panel" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.05), rgba(99,102,241,0.1))', border: '1px solid rgba(99, 102, 241, 0.2)', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+      <div className="glass-panel" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.05), rgba(99,102,241,0.1))', border: '1px solid rgba(99, 102, 241, 0.2)', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
         <ShieldCheck size={48} color="var(--accent-primary)" />
         <div>
           <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>System-Wide Chat Monitoring</h3>
@@ -50,7 +50,7 @@ export default function ChatMonitoringTab({ token, stats, showToast }) {
       </div>
 
       {/* Stats Cards */}
-      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+      <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
         
         {/* Total messages */}
         <div className="glass-panel stat-card" style={{ padding: '1.25rem' }}>
@@ -99,7 +99,7 @@ export default function ChatMonitoringTab({ token, stats, showToast }) {
         </p>
 
         {/* Guidelines columns */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }} className="grid-cols-1">
+        <div className="responsive-split-modal" style={{ gap: '1.5rem' }}>
           <div style={{ background: 'rgba(0,0,0,0.1)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-glass-light)' }}>
             <h5 style={{ fontSize: '0.875rem', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Flagged Keywords:</h5>
             <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>

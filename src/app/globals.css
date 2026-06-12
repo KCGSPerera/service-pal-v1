@@ -1088,3 +1088,323 @@ body.light-theme .form-input {
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   Admin Dashboard Responsive Overrides & Hamburger Slide-Out
+   ========================================================================== */
+
+/* Mobile Hamburger Header Bar */
+.mobile-admin-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.25rem;
+}
+
+/* Sidebar Drawer Overlay */
+.admin-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 999;
+  animation: fadeIn var(--transition-fast) ease-out;
+}
+
+/* Responsive splits that stack on mobile */
+.responsive-split-analytics {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.responsive-split-categories {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+}
+
+.responsive-split-modal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.responsive-split-modal-img {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Responsive Complaint Desk Split */
+.responsive-split-tickets {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  min-height: 500px;
+}
+
+.responsive-split-ticket-details {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 1rem;
+  height: 600px;
+}
+
+/* Mobile responsive media breakpoints */
+@media (max-width: 968px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .mobile-admin-header {
+    display: flex !important;
+  }
+
+  /* Transform Sidebar into Slide-out Drawer */
+  .admin-sidebar-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 290px;
+    z-index: 1000;
+    background: var(--bg-secondary) !important;
+    border-right: 1px solid var(--border-glass) !important;
+    border-radius: 0 !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4) !important;
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1) !important;
+    overflow-y: auto;
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  .admin-sidebar-container.open {
+    transform: translateX(0) !important;
+  }
+
+  .responsive-split-analytics,
+  .responsive-split-categories {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .responsive-split-tickets {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* In ticket desk, hide list when viewing active ticket detail */
+  .responsive-split-tickets.has-active .ticket-queue-column {
+    display: none !important;
+  }
+
+  .responsive-split-ticket-details {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-split-modal,
+  .responsive-split-modal-img {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* ==========================================================================
+   Mobile-Responsive Alignment Refinements
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Prevent horizontal layout breakouts and reduce padding */
+  .main-content {
+    padding: 0.75rem 0.5rem !important;
+  }
+  .p-4 {
+    padding: 0.85rem !important;
+  }
+  .glass-panel {
+    border-radius: var(--radius-sm) !important;
+  }
+
+  /* Compact Navbar layout to prevent giant vertical headers */
+  .navbar {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0.75rem 1rem !important;
+    gap: 0.5rem !important;
+  }
+  .nav-brand {
+    font-size: 1.35rem !important;
+  }
+  .nav-links {
+    width: auto !important;
+    gap: 0.5rem !important;
+    justify-content: flex-end !important;
+  }
+  .nav-link {
+    padding: 0.35rem 0.5rem !important;
+    font-size: 0.825rem !important;
+  }
+  .profile-trigger {
+    padding: 0.15rem 0.35rem !important;
+    gap: 0.4rem !important;
+  }
+  .profile-trigger-img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  /* Scale headers gracefully to avoid text wrapping breakups */
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.35rem !important; }
+  h3 { font-size: 1.15rem !important; }
+  h4 { font-size: 1.05rem !important; }
+
+  /* Compact metrics grids - 2 items per row instead of 1 */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  .stat-card {
+    padding: 0.85rem !important;
+  }
+  .stat-card-value {
+    font-size: 1.35rem !important;
+  }
+  .stat-card-title {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .stat-card-sub {
+    font-size: 0.7rem !important;
+  }
+
+  /* Tables font scaling and scroll container */
+  .table-container {
+    border-radius: 4px;
+    border: 1px solid var(--border-glass);
+    background: rgba(0,0,0,0.1);
+  }
+  .data-table th, 
+  .data-table td {
+    padding: 0.65rem 0.5rem !important;
+    font-size: 0.775rem !important;
+  }
+  .data-table th {
+    font-size: 0.725rem !important;
+  }
+
+  /* Mobile-only close button support inside admin sidebar drawer */
+  .mobile-only {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Smaller mobile screen sizes */
+  .navbar {
+    padding: 0.6rem 0.75rem !important;
+  }
+  .nav-brand {
+    font-size: 1.2rem !important;
+  }
+  .nav-links {
+    gap: 0.35rem !important;
+  }
+  .nav-link {
+    padding: 0.25rem 0.4rem !important;
+    font-size: 0.775rem !important;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Mobile Main Menu Drawer Overlay */
+.main-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 999;
+  animation: fadeIn var(--transition-fast) ease-out;
+}
+
+/* Mobile Main Menu Drawer */
+.main-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 290px;
+  z-index: 1000;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-glass);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
+  transform: translateX(100%);
+  transition: transform var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-nav-drawer.open {
+  transform: translateX(0);
+}
+
+.navbar-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggle {
+    display: flex !important;
+  }
+  .navbar .nav-links {
+    display: none !important;
+  }
+}
+
+.span-2-desktop {
+  grid-column: span 2;
+}
+
+@media (max-width: 576px) {
+  .span-2-desktop {
+    grid-column: span 1 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .hide-on-desktop {
+    display: none !important;
+  }
+}

@@ -40,7 +40,7 @@ export default function SubscriptionTab({ subscriptions = [], fetchSubscriptions
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ margin: 0 }}>Subscription Approvals</h2>
         
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem' }}>
             <input 
               type="checkbox" 
@@ -89,13 +89,13 @@ export default function SubscriptionTab({ subscriptions = [], fetchSubscriptions
                   <td>{new Date(sub.createdAt).toLocaleDateString()}</td>
                   <td>
                     {sub.subscription_status === 'Pending Approval' && (
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button className="btn btn-success" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => handleAction(sub._id, 'approve')}>Approve</button>
                         <button className="btn btn-danger" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => handleAction(sub._id, 'reject')}>Reject</button>
                       </div>
                     )}
                     {sub.subscription_status === 'Active' && (
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button className="btn btn-danger" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} onClick={() => handleAction(sub._id, 'suspend')}>Suspend</button>
                       </div>
                     )}
